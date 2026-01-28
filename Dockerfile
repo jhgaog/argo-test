@@ -1,5 +1,5 @@
 # Dockerfile —— 多阶段构建，安全精简（基于 python:3.11-slim）
-FROM python:3.11-slim
+FROM 10.62.48.116:30085/library/python:3.11-slim
 
 # 设置工作目录
 WORKDIR /app

@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: 10.62.48.116:30085/library/pythondemo
+  tag: "7194641"     # ← ✅ 每次发布，你只需改这一行！
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8000
+
+env:
+  ENVIRONMENT: production
+
+service:
+  enabled: true              # ← 控制是否创建 Service（设为 false 可禁用）
+  type: ClusterIP            # ← 可选值：ClusterIP / NodePort / LoadBalancer
+  port: 8000                 # ← Service 暴露的端口（也是 Flask 监听端口）
+  # nodePort: 30080           # ← 仅当 type=NodePort 时启用（30000-32767）
+  # loadBalancerIP: ""        # ← 仅当 type=LoadBalancer 时指定（如 AWS ELB / GCP LB 固定 IP）

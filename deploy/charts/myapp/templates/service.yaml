@@ -1,0 +1,38 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "myapp.fullname" . }}
+  labels:
+    {{- include "myapp.labels" . | nindent 4 }}
+    # 🔁 Argo CD 自动同步所需标签（推荐保留）
+    argocd.argoproj.io/instance: {{ .Release.Name }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  # 👇 仅当 type=NodePort 或 LoadBalancer 时生效
+  {{- if and (eq .Values.service.type "NodePort") (.Values.service.nodePort) }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      nodePort: {{ .Values.service.nodePort }}
+  {{- else if eq .Values.service.type "LoadBalancer" }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      # 🌐 可选：指定 loadBalancerIP（如云厂商固定 IP）
+      # loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- else }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+  {{- end }}
+  # 🔗 选择器：匹配 Deployment 的 Pod 标签
+  selector:
+    {{- include "myapp.selectorLabels" . | nindent 4 }}
+  # 🛡️ 生产建议：启用 sessionAffinity（如需粘性会话）
+  # sessionAffinity: ClientIP
+  # sessionAffinityConfig:
+  #   clientIP:
+  #     timeoutSeconds: 10800
+{{- end }}

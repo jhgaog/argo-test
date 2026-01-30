@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: 10.62.48.116:30085/library/pythondemo
-  tag: "7194641"     # ← ✅ 每次发布，你只需改这一行！
+  tag: "eedcadf"     # ← ✅ 每次发布，你只需改这一行！
   pullPolicy: Always
 
 service:
